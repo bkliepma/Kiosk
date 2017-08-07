@@ -1,0 +1,1 @@
+/home/pi/grive2-master/run_feh.sh
