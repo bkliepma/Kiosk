@@ -1,0 +1,43 @@
+This project is to set up a digital picture frame that 1) never needs to be touched at the frame (no maintenance) 2) can be updated by anyone with the correct credentials and a computer (no/minimal training) 3) doesn't require the frame and the updater to be on the same network (allows the frame to be on a public network with minimal access)
+
+You will need a Raspberry Pi (this was originally set up with RPi 2, but could be done with a 3), an HDMI-enabled screen such as a TV, and one each of an HDMI and micro-USB cable.
+
+References and resources can be found at the links below
+
+· (SKIP FOR RECOVERY) Set up a new Google account and make folders for each kiosk/screen/whatever
+· Install Rasbian
+·         Disable blank screen
+          o   http://www.geeks3d.com/hacklab/20160108/how-to-disable-the-blank-screen-on-raspberry-pi-raspbian/
+·         Install grive2
+          o   http://yourcmc.ru/wiki/Grive2#Installation
+          o   https://github.com/vitalif/grive2
+            §  sudo apt-get update && sudo apt-get upgrade
+            §  sudo apt-get install git cmake build-essential libgcrypt11-dev libyajl-dev libboost-all-dev libcurl4-openssl-dev libexpat1-dev libcppunit-dev binutils-dev
+            §  Follow directions
+·         Create gdrive folder, authenticate, sync folder
+          o   cd .. cd ..
+          o   mkdir gdrive
+          o   cd gdrive
+          o   grive –a
+          o   grive
+·         remove libreoffice, set grive to run automatically and reboot
+          o   sudo apt-get remove libreoffice*
+          o   Copy run_grive.sh to the grive2-master folder
+            §  MAKE EXECUTABLE
+          o   sudo leafpad /etc/crontab
+            §  05 *     * * *          pi /home/pi/grive2-master/run_grive.sh
+            §  09 *       * * *      root       reboot
+·         Set feh to start slideshow on boot
+          o   Install feh
+            §  sudo apt-get update
+            §  sudo apt-get install feh
+          o   Copy run_feh.sh to grive2
+             §  MAKE EXECUTABLE
+          o    sudo leafpad ~/.config/lxsession/LXDE-pi/autostart
+          o   @feh -Y -x -q -D 5 -B black -F -Z -r /home/pi/gdrive/Kiosk1
+            §  Change folder as needed
+          o   Make an executable text file (in grive2-master) with this text:
+            §  sudo leafpad ~/.config/lxsession/LXDE-pi/autostart
+            §  This allows you to change the folder easily if needed.
+·         Reboot and confirm feh autostarts
+
